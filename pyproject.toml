@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "poetry-az-func"
+version = "0.1.0"
+description = ""
+authors = ["Abdelrashied, Mostafa <Mostafa.Abdelrashied@outlook.de>"]
+readme = "README.md"
+
+[[tool.poetry.packages]]
+include = "src"
+from = "."
+
+[tool.poetry.dependencies]
+python = "^3.11"
+scipy = "^1.14.1"
+loguru = "^0.7.2"
+numpy = "^2.1.2"
+azure-functions = "^1.21.3"
+polars = "^1.9.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.9"
+pytest = "^8.3.3"
+pre-commit = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+main = "src.main:main"

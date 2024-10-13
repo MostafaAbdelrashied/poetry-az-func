@@ -1,0 +1,50 @@
+name: CD
+
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: |
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-root
+
+      - name: Build project
+        run: |
+          poetry build
+          mkdir -p .python_packages/lib/site-packages
+          poetry export -f requirements.txt --output requirements.txt --without-hashes
+          pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+
+      - name: Prepare deployment files
+        run: |
+          cp azure_functions/timeTrigger/function_app.py .
+          cp azure_functions/timeTrigger/host.json .
+
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+          package: .
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          scm-do-build-during-deployment: true
+          enable-oryx-build: true

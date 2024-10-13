@@ -1,0 +1,19 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [mainx]
+  pull_request:
+    branches: [mainx]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  cd:
+    needs: ci
+    permissions:
+      id-token: write
+      contents: read
+    uses: ./.github/workflows/cd.yml
+    secrets: inherit
