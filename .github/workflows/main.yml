@@ -2,9 +2,19 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'docs/**'
   pull_request:
-    branches: [main]
+    branches: [ main ]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'docs/**'
 
 jobs:
   ci:
