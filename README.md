@@ -1,4 +1,4 @@
-# Azure Functions for Large-Scale Python Projects with Poetry
+# Azure Functions with Poetry
 
 [![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Azure Functions](https://img.shields.io/badge/Azure%20Functions-Supported-blue)](https://azure.microsoft.com/en-us/services/functions/)
@@ -6,18 +6,11 @@
 [![CI/CD Pipeline](https://github.com/MostafaAbdelrashied/poetry-az-func/actions/workflows/main.yml/badge.svg)](https://github.com/MostafaAbdelrashied/poetry-az-func/actions/workflows/main.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project demonstrates how to use Poetry as a package manager for Azure Functions Python projects. It showcases best practices for dependency management and project structure when developing Azure Functions with Python.
-
-## Features
-
-- **Azure Functions Project Structure**: Organized layout for scalable projects.
-- **Poetry for Dependency Management**: Simplify managing dependencies and virtual environments.
-- **Sample CRON Trigger Function**: Example of a time-triggered Azure Function.
-- **GitHub Actions Workflow for CI/CD**: Automate testing and deployment with GitHub Actions.
+This project demonstrates how to use Poetry as a package manager for Azure Functions. It is production-ready and can be used as a template for your next project. It includes a sample time-triggered Azure Function and a GitHub Actions workflow for CI/CD for automated testing and deployment.
 
 ## Prerequisites
 
-- **Python 3.11**
+- Python 3.11
 - **[Poetry](https://python-poetry.org/docs/#installation)**
 - **[Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)**
 - **[Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local#install-the-azure-functions-core-tools)**
