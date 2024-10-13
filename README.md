@@ -6,7 +6,7 @@
 [![CI/CD Pipeline](https://github.com/MostafaAbdelrashied/poetry-az-func/actions/workflows/main.yml/badge.svg)](https://github.com/MostafaAbdelrashied/poetry-az-func/actions/workflows/main.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project demonstrates how to use [Poetry](https://python-poetry.org/) as a package manager for Azure Functions Python projects. It showcases best practices for dependency management and project structure when developing Azure Functions with Python.
+This project demonstrates how to use Poetry as a package manager for Azure Functions Python projects. It showcases best practices for dependency management and project structure when developing Azure Functions with Python.
 
 ## Features
 
@@ -17,10 +17,10 @@ This project demonstrates how to use [Poetry](https://python-poetry.org/) as a p
 
 ## Prerequisites
 
-- **Python 3.11**: Make sure you have Python 3.11 installed.
-- **[Poetry](https://python-poetry.org/docs/#installation)**: For dependency management.
-- **[Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local#install-the-azure-functions-core-tools)**: For running Azure Functions locally.
-- **[Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)**: For deployment to Azure.
+- **Python 3.11**
+- **[Poetry](https://python-poetry.org/docs/#installation)**
+- **[Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)**
+- **[Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local#install-the-azure-functions-core-tools)**
 
 ### Azure Setup
 
@@ -36,8 +36,6 @@ az functionapp create \
   --storage-account <STORAGE_ACCOUNT_NAME> \
   --os-type Linux
 ```
-
-Replace `<RESOURCE_GROUP>`, `<LOCATION>`, `<FUNCTION_APP_NAME>`, and `<STORAGE_ACCOUNT_NAME>` with your own values.
 
 ### GitHub Repository Configuration
 
@@ -58,69 +56,34 @@ az functionapp deployment list-publishing-profiles \
   --output tsv
 ```
 
-Copy the output and add it as a secret named `AZURE_FUNCTIONAPP_PUBLISH_PROFILE` in your GitHub repository.
-
-## Installation
-
-Clone the repository and navigate to the project directory:
+## Local Development
 
 ```bash
 git clone https://github.com/MostafaAbdelrashied/poetry-az-func.git
 cd poetry-az-func
-```
-
-Install dependencies using Poetry:
-
-```bash
 poetry install --with dev
-```
-
-## Local Development
-
-Activate the Poetry virtual environment:
-
-```bash
 poetry shell
-```
-
-Start the function app locally:
-
-```bash
 func start
 ```
 
 ## Project Structure
 
-```
-poetry-az-func/
+```bash
+poetry-az-func
 ├── README.md
-├── azure_functions/
-│   └── timeTrigger/
+├── azure_functions # Azure Function triggers and configurations.
+│   └── timeTrigger
 │       ├── function_app.py
 │       ├── host.json
 │       └── local.settings.json
 ├── poetry.lock
 ├── pyproject.toml
 ├── ruff.toml
-├── src/
+├── src # Core Python code for your application.
 │   ├── __init__.py
 │   ├── main.py
-│   ├── data/
-│   │   └── __init__.py
-│   ├── optimization/
-│   │   ├── __init__.py
-│   │   └── objective.py
-│   └── utils/
-│       ├── __init__.py
-│       ├── args_parser.py
-│       └── logging.py
-└── tests/
-    ├── __init__.py
-    └── test_main.py
+│   ├── data
+│   ├── optimization
+│   └── utils
+└── tests
 ```
-
-- **azure_functions**: Contains Azure Function triggers and configurations.
-- **src**: Core Python code for your application.
-- **tests**: Unit tests for your application.
-- **pyproject.toml**: Configuration file for Poetry and other tools.
-- **ruff.toml**: Configuration for Ruff linter.
