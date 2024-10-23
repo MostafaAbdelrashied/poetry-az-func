@@ -73,6 +73,7 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+
       - name: Deploy to Azure Functions
         run: |
           echo "Deploying to Azure Functions..."
@@ -82,6 +83,7 @@ jobs:
             -x "*.git*" \
             -x "*.github*" \
             -x "tests/*" \
+            -x "environments/*" \
             -x "*.pytest_cache*"
           
           # Update function app settings
@@ -89,7 +91,8 @@ jobs:
             --resource-group ${{ vars.RESOURCE_GROUP }} \
             --name ${{ vars.AZURE_FUNCTIONAPP_NAME }} \
             --settings \
-              AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+              AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
+              AzureWebJobsStorage="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
 
           # Deploy using Azure CLI
           az functionapp deployment source config-zip \
