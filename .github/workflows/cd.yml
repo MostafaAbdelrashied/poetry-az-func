@@ -2,11 +2,15 @@ name: CD
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: ${{ inputs.environment == 'main' && 'prod' || inputs.environment }}
 
     env:
       PYTHON_VERSION: "3.11"
@@ -28,7 +32,7 @@ jobs:
         run: |
           echo "Installing and configuring Poetry..."
           pip install poetry
-          poetry config virtualenvs.create false  # Disable virtual env creation
+          poetry config virtualenvs.create false
 
       - name: Cache Poetry dependencies
         uses: actions/cache@v4
@@ -48,14 +52,9 @@ jobs:
       - name: Build Project
         run: |
           echo "Building project..."
-
-          # Build poetry project
           poetry build
-
-          # Create packages directory
           mkdir -p ${{ env.PACKAGES_DIR }}
-
-          # Export and install requirements
+          
           echo "Exporting requirements..."
           poetry export -f requirements.txt \
             --output requirements.txt \
@@ -66,7 +65,6 @@ jobs:
             --target="${{ env.PACKAGES_DIR }}" \
             --no-cache-dir
 
-          # Create deployment ZIP
           zip -r -q deployment.zip . \
             -x "*.git*" \
             -x "*.github*" \
@@ -83,8 +81,7 @@ jobs:
 
       - name: Deploy to Azure Functions
         run: |
-          echo "Deploying to Azure Functions..."
-
+          echo "Deploying to Azure Functions for ${{ inputs.environment }} environment..."
 
           # Update function app settings
           az functionapp config appsettings set \
@@ -92,7 +89,8 @@ jobs:
             --name ${{ vars.AZURE_FUNCTIONAPP_NAME }} \
             --settings \
               AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
-              AzureWebJobsStorage="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+              AzureWebJobsStorage="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" \
+              ENVIRONMENT="${{ inputs.environment == 'main' && 'prod' || inputs.environment }}"
 
           # Deploy using Azure CLI
           az functionapp deployment source config-zip \
@@ -125,7 +123,6 @@ jobs:
 
           echo "❌ Deployment verification failed after ${{ env.MAX_DEPLOYMENT_RETRIES }} attempts"
 
-          # Get function app logs for debugging
           echo "Fetching recent logs..."
           az functionapp logs tail \
             --name ${{ vars.AZURE_FUNCTIONAPP_NAME }} \

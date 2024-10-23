@@ -2,14 +2,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, staging, dev ]
     paths-ignore:
       - '**/*.md'
       - '.gitignore'
       - 'LICENSE'
       - 'docs/**'
   pull_request:
-    branches: [ main ]
+    branches: [ main, staging, dev ]
     paths-ignore:
       - '**/*.md'
       - '.gitignore'
@@ -19,6 +19,8 @@ on:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
+    with:
+      environment: ${{ github.ref_name }}
 
   cd:
     needs: ci
@@ -26,4 +28,6 @@ jobs:
       id-token: write
       contents: read
     uses: ./.github/workflows/cd.yml
+    with:
+      environment: ${{ github.ref_name }}
     secrets: inherit

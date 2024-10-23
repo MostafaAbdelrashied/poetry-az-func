@@ -2,11 +2,16 @@ name: CI
 
 on:
   workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: ${{ inputs.environment == 'main' && 'prod' || inputs.environment }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
