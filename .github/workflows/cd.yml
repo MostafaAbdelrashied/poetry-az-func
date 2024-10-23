@@ -13,7 +13,7 @@ jobs:
       PACKAGES_DIR: .python_packages/lib/site-packages
       MAX_DEPLOYMENT_RETRIES: 5
       RETRY_INTERVAL: 30
-      
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
+          cache: "pip"
 
       - name: Install Poetry
         run: |
@@ -48,23 +48,31 @@ jobs:
       - name: Build Project
         run: |
           echo "Building project..."
-          
+
           # Build poetry project
           poetry build
-          
+
           # Create packages directory
           mkdir -p ${{ env.PACKAGES_DIR }}
-          
+
           # Export and install requirements
           echo "Exporting requirements..."
           poetry export -f requirements.txt \
             --output requirements.txt \
             --without-hashes
-          
+
           echo "Installing requirements to target directory..."
           pip install -r requirements.txt \
             --target="${{ env.PACKAGES_DIR }}" \
             --no-cache-dir
+
+          # Create deployment ZIP
+          zip -r -q deployment.zip . \
+            -x "*.git*" \
+            -x "*.github*" \
+            -x "tests/*" \
+            -x "environments/*" \
+            -x "*.pytest_cache*"
 
       - name: Azure Login
         uses: azure/login@v2
@@ -73,19 +81,11 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-
       - name: Deploy to Azure Functions
         run: |
           echo "Deploying to Azure Functions..."
-          
-          # Create deployment ZIP
-          zip -r deployment.zip . \
-            -x "*.git*" \
-            -x "*.github*" \
-            -x "tests/*" \
-            -x "environments/*" \
-            -x "*.pytest_cache*"
-          
+
+
           # Update function app settings
           az functionapp config appsettings set \
             --resource-group ${{ vars.RESOURCE_GROUP }} \
@@ -99,15 +99,14 @@ jobs:
             --resource-group ${{ vars.RESOURCE_GROUP }} \
             --name ${{ vars.AZURE_FUNCTIONAPP_NAME }} \
             --src deployment.zip
-          
 
       - name: Verify Deployment
         run: |
           echo "Verifying deployment health..."
-          
+
           endpoint="https://${{ vars.AZURE_FUNCTIONAPP_NAME }}.azurewebsites.net/"
           counter=0
-          
+
           while [ $counter -lt ${{ env.MAX_DEPLOYMENT_RETRIES }} ]; do
             echo "Attempt $(($counter + 1))/${{ env.MAX_DEPLOYMENT_RETRIES }}"
             
@@ -123,14 +122,14 @@ jobs:
               sleep ${{ env.RETRY_INTERVAL }}
             fi
           done
-          
+
           echo "❌ Deployment verification failed after ${{ env.MAX_DEPLOYMENT_RETRIES }} attempts"
-          
+
           # Get function app logs for debugging
           echo "Fetching recent logs..."
           az functionapp logs tail \
             --name ${{ vars.AZURE_FUNCTIONAPP_NAME }} \
             --resource-group ${{ vars.RESOURCE_GROUP }} \
             --limit 50
-          
+
           exit 1
