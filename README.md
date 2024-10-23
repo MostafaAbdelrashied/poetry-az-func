@@ -4,6 +4,7 @@
 [![Azure Functions](https://img.shields.io/badge/Azure%20Functions-Supported-blue)](https://azure.microsoft.com/en-us/services/functions/)
 [![Poetry](https://img.shields.io/badge/Poetry-Package%20Manager-blue)](https://python-poetry.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 [![Dev](https://img.shields.io/github/actions/workflow/status/MostafaAbdelrashied/poetry-az-func/main.yml?branch=dev&label=Dev)](https://github.com/MostafaAbdelrashied/poetry-az-func/actions?query=workflow%3ACI%2FCD+branch%3Adev)
 [![Staging](https://img.shields.io/github/actions/workflow/status/MostafaAbdelrashied/poetry-az-func/main.yml?branch=staging&label=Staging)](https://github.com/MostafaAbdelrashied/poetry-az-func/actions?query=workflow%3ACI%2FCD+branch%3Astaging)
 [![Production](https://img.shields.io/github/actions/workflow/status/MostafaAbdelrashied/poetry-az-func/main.yml?branch=main&label=Production)](https://github.com/MostafaAbdelrashied/poetry-az-func/actions?query=workflow%3ACI%2FCD+branch%3Amain)
